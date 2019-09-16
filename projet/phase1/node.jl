@@ -1,3 +1,5 @@
+"Test modif"
+
 import Base.show
 
 """Type abstrait dont d'autres types de noeuds dériveront."""
