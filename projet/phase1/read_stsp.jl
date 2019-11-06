@@ -39,14 +39,17 @@ function read_nodes(header::Dict{String}{String}, filename::String)
   nodes = Dict{Int}{Vector{Float64}}()
   node_coord_type = header["NODE_COORD_TYPE"]
   display_data_type = header["DISPLAY_DATA_TYPE"]
+  dim = parse(Int, header["DIMENSION"])
 
-
+  # Si les coordonnées des noeuds du graphe ne sont pas explicitées, on les fixe arbitrairement à [0, 0].
   if !(node_coord_type in ["TWOD_COORDS", "THREED_COORDS"]) && !(display_data_type in ["COORDS_DISPLAY", "TWOD_DISPLAY"])
+    for i = 1 : dim
+      nodes[i] = [0, 0]
+    end
     return nodes
   end
 
   file = open(filename, "r")
-  dim = parse(Int, header["DIMENSION"])
   k = 0
   display_data_section = false
   node_coord_section = false

@@ -18,7 +18,7 @@ mutable struct Edge{T} <: AbstractEdge{T}
   name::String
   s_node::AbstractNode{T}
   d_node::AbstractNode{T}
-  weight::Int64
+  weight::Float64
 end
 
 # on présume que tous les arcs dérivant d'AbstractEdge
