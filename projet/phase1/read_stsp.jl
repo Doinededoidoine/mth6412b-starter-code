@@ -39,14 +39,17 @@ function read_nodes(header::Dict{String}{String}, filename::String)
   nodes = Dict{Int}{Vector{Float64}}()
   node_coord_type = header["NODE_COORD_TYPE"]
   display_data_type = header["DISPLAY_DATA_TYPE"]
+  dim = parse(Int, header["DIMENSION"])
 
-
+  # Si les coordonnées des noeuds du graphe ne sont pas explicitées, on les fixe arbitrairement à [0, 0].
   if !(node_coord_type in ["TWOD_COORDS", "THREED_COORDS"]) && !(display_data_type in ["COORDS_DISPLAY", "TWOD_DISPLAY"])
+    for i = 1 : dim
+      nodes[i] = [0, 0]
+    end
     return nodes
   end
 
   file = open(filename, "r")
-  dim = parse(Int, header["DIMENSION"])
   k = 0
   display_data_section = false
   node_coord_section = false
@@ -217,7 +220,7 @@ function read_stsp(filename::String)
   return graph_nodes, graph_edges
 end
 
-"""Affiche un graphe étant données un ensemble de noeuds et d'arêtes.
+"""Affiche un graphe étant donné un ensemble de noeuds et d'arêtes.
 
 Exemple :
 
@@ -249,4 +252,23 @@ end
 function plot_graph(filename::String)
   graph_nodes, graph_edges = read_stsp(filename)
   plot_graph(graph_nodes, graph_edges)
+end
+
+"""Affiche un graphe."""
+function plot_graph(graph)
+  fig = plot(legend=false)
+
+  # Edge positions :
+  for edge in edges(graph)
+    plot!([data(s_node(edge))[1], data(d_node(edge))[1]], [data(s_node(edge))[2], data(d_node(edge))[2]],
+        linewidth=1.5, alpha=0.75, color=:lightgray)
+  end
+
+  # Node positions :
+  x = [data(node)[1] for node in nodes(graph)]
+  y = [data(node)[2] for node in nodes(graph)]
+  scatter!(x, y)
+
+  println("Coût total : ", graphweight(graph))
+  fig
 end

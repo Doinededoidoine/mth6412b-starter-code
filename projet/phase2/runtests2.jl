@@ -20,7 +20,7 @@ add_edge!(graph_3n, edge3)
 add_node!(graph_3n, node1)
 add_node!(graph_3n, node2)
 add_node!(graph_3n, node3)
-parent_table_3n = init_parent_table(graph_3n)
+parent_table_3n = init_parent_table_kruskal_kruskal(graph_3n)
 
 
 # Graphe à 4 noeuds
@@ -31,7 +31,7 @@ Edge{Int64}("3", Node{Int64}("1", 1), Node{Int64}("4", 4), 4),
 Edge{Int64}("4", Node{Int64}("2", 2), Node{Int64}("3", 3), 3),
 Edge{Int64}("5", Node{Int64}("2", 2), Node{Int64}("4", 4), 2),
 Edge{Int64}("6", Node{Int64}("3", 3), Node{Int64}("4", 4), 1)])
-parent_table_4n = init_parent_table(graph_4n)
+parent_table_4n = init_parent_table_kruskal_kruskal(graph_4n)
 
 
 # Graphe à 6 noeuds
@@ -44,7 +44,7 @@ Edge{Int64}("", Node{Int64}("3", 3), Node{Int64}("4", 4), 6),
 Edge{Int64}("", Node{Int64}("4", 4), Node{Int64}("5", 5), 5),
 Edge{Int64}("", Node{Int64}("2", 2), Node{Int64}("5", 5), 4),
 Edge{Int64}("", Node{Int64}("3", 3), Node{Int64}("6", 6), 3)])
-parent_table_6n = init_parent_table(graph_6n)
+parent_table_6n = init_parent_table_kruskal_kruskal(graph_6n)
 
 
 # Graphe à 10 noeuds
@@ -55,23 +55,23 @@ end
 for e = 1 : 9
     add_edge!(graph_10n, Edge{Int64}("", nodes(graph_10n)[e], nodes(graph_10n)[e + 1], 100 - e))
 end
-parent_table_10n = init_parent_table(graph_10n)
+parent_table_10n = init_parent_table_kruskal_kruskal(graph_10n)
 
 
 # Graphe à n noeuds : bayg29.tsp
 graph_path1 = joinpath(@__DIR__, "..", "..", "instances/stsp/bayg29.tsp")
 graph_Nn1 = main1(graph_path1)
-parent_table_Nn1 = init_parent_table(graph_Nn1)
+parent_table_Nn1 = init_parent_table_kruskal_kruskal(graph_Nn1)
 
 # Graphe à n noeuds : bays29.tsp
 graph_path2 = joinpath(@__DIR__, "..", "..", "instances/stsp/bays29.tsp")
 graph_Nn2 = main1(graph_path2)
-parent_table_Nn2 = init_parent_table(graph_Nn2)
+parent_table_Nn2 = init_parent_table_kruskal_kruskal(graph_Nn2)
 
 # Graphe à n noeuds : dantzig42.tsp
 graph_path3 = joinpath(@__DIR__, "..", "..", "instances/stsp/dantzig42.tsp")
 graph_Nn3 = main1(graph_path3)
-parent_table_Nn3 = init_parent_table(graph_Nn3)
+parent_table_Nn3 = init_parent_table_kruskal_kruskal(graph_Nn3)
 
 
 # Fonctions
@@ -91,7 +91,7 @@ end
 function is_root_unique(parent_table::AbstractParentTable)
     nodes = enfants(parent_table)
     for i = 1 : length(nodes)
-        if root(parent_table, nodes[i]) != root(parent_table, nodes[1])
+        if root(parent_table, i) != root(parent_table, 1)
             return false
         end
     end

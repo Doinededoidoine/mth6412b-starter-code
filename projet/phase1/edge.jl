@@ -18,7 +18,7 @@ mutable struct Edge{T} <: AbstractEdge{T}
   name::String
   s_node::AbstractNode{T}
   d_node::AbstractNode{T}
-  weight::Int64
+  weight::Float64
 end
 
 # on présume que tous les arcs dérivant d'AbstractEdge
@@ -35,6 +35,11 @@ d_node(edge::AbstractEdge) = edge.d_node
 
 """Renvoie le poids de l'arc."""
 weight(edge::AbstractEdge) = edge.weight
+
+function set_weight!(edge::AbstractEdge, new_weight::Float64)
+  edge.weight = new_weight
+  edge
+end
 
 """Affiche un arc."""
 function show(edge::AbstractEdge)

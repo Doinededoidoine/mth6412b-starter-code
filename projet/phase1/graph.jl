@@ -24,14 +24,20 @@ mutable struct Graph{T} <: AbstractGraph{T}
 end
 
 """Ajoute un noeud au graphe."""
-function add_node!(graph::Graph{T}, node::AbstractNode{T}) where T
+function add_node!(graph::Graph{T}, node::Node{T}) where T
   push!(graph.nodes, node)
   graph
 end
 
-"""Ajoute un arc au graphe."""
-function add_edge!(graph::Graph{T}, edge::AbstractEdge{T}) where T
+"""Ajoute une arête au graphe."""
+function add_edge!(graph::Graph{T}, edge::Edge{T}) where T
   push!(graph.edges, edge)
+  graph
+end
+
+"""Retire une arête au graphe."""
+function pop_edge!(graph::Graph{T}, i::Int64) where T
+  deleteat!(graph.edges, i)
   graph
 end
 
@@ -62,4 +68,53 @@ function show(graph::Graph)
   for edge in edges(graph)
     show(edge)
   end
+end
+
+"""Trouver le poids de l'arc reliant ces deux noeuds"""
+function findweight(graph::AbstractGraph, node1::AbstractNode, node2::AbstractNode)
+  try
+    return weight(filter(edge -> name(s_node(edge)) == name(node1) && name(d_node(edge)) == name(node2) || name(s_node(edge)) == name(node2) && name(d_node(edge)) == name(node1), edges(graph))[1])
+  catch e
+    error("Aucune arête entre les noeuds ", name(node1), " et ", name(node2), " n'a été trouvée dans le graphe ", name(graph))
+  end
+end
+
+"""Trouver le poids du graphe"""
+function graphweight(graph::AbstractGraph)
+  weightgraph = 0
+  for edge in edges(graph)
+    weightgraph += weight(edge)
+  end
+  return weightgraph
+end
+
+"""Afficher si un noeud se trouve dans un graphe"""
+function find_node(graph::AbstractGraph, node::AbstractNode)
+  return name(node) in name.(nodes(graph))
+end
+
+"""Afficher le noeud le plus lourd du graph"""
+function find_heaviest_node(graph::AbstractGraph)
+  edge_max = []
+  weight_max = -Inf
+  for edge in edges(graph)
+    if weight(edge) > weight_max
+      edge_max = edge
+      weight_max = weight(edge_max)
+    end
+  end
+  return s_node(edge_max)
+end
+
+"""Afficher le noeud le plus leger du graph"""
+function find_lightest_node(graph::AbstractGraph)
+  edge_min = []
+  weight_min = Inf
+  for edge in edges(graph)
+    if weight(edge) < weight_min
+      edge_min = edge
+      weight_min = weight(edge_min)
+    end
+  end
+  return s_node(edge_min)
 end
