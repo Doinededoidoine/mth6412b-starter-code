@@ -140,7 +140,7 @@ function HK(graph::AbstractGraph{T}, algo::String = "prim", starting_node::Abstr
     HK_tour = Graph{T}("HK_tour", [], [])                       # Tournée courante
     min_tour = ref_tour                                         # Meilleure tournée
     degree_table = init_degree_table(graph)                     # Degré de chaque noeud
-    n_pi = Vector{Float64}(step * ones(length(nodes(graph))))   # Coefficient pi de chaque noeud
+    n_pi = Vector{Float64}(step * ones(nb_nodes(graph)))        # Coefficient pi de chaque noeud
     w = -Inf                                                    # Borne inférieure courante
     max_w = w                                                   # Meilleure borne inférieure
     max_n_pi = n_pi                                             # Meilleur jeu de coefficients
@@ -157,7 +157,7 @@ function HK(graph::AbstractGraph{T}, algo::String = "prim", starting_node::Abstr
         # de coût modifié minimum, puis on calcule le degré de chaque noeud dans ce 1-arbre.
         new_edge = sort(filter(e -> (name(s_node(e)) == name(nodes(graph)[1]) || name(d_node(e)) == name(nodes(graph)[1])) && !(e in edges(one_tree)), edges(graph)), by=weight)[1]
         add_edge!(one_tree, Edge{T}(name(new_edge), s_node(new_edge), d_node(new_edge), weight(new_edge)))
-        degree_table = degree_table(one_tree)
+        degree_table = d_table(one_tree)
         # On rend au graphe, au 1-arbre et à la tournée leurs poids d'origine.
         restore_costs!(graph, n_pi)
         restore_costs!(one_tree, n_pi)

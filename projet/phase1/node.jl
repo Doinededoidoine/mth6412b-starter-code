@@ -47,7 +47,7 @@ function set_min_weight!(node::AbstractNode, weight::Float64)
   node
 end
 
-"""Renvoie un booléen : true si le poids du noeuds 1 est inférieur au poids du noeud 2, false sinon."""
+"""Renvoie un booléen : true si le poids du noeud 1 est inférieur au poids du noeud 2, false sinon."""
 isless(node1::AbstractNode, node2::AbstractNode) = min_weight(node1) < min_weight(node2)
 
 """Renvoie un booléen : true si le poids du noeuds 1 est égal au poids du noeud 2, false sinon."""
